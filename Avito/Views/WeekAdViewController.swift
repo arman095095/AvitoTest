@@ -17,6 +17,7 @@ class WeekAdViewController: UIViewController, WeekAdDisplayLogic {
     var interactor: WeekAdBusinessLogic?
     private var weekAdViewModel: WeekAdViewModel!
     private var collectionView: UICollectionView!
+    private var constants = ViewConstants()
     private var selectButton: UIButton!
     private var dataSource: UICollectionViewDiffableDataSource<Sections, WeekAdViewModel.CellModel>!
     
@@ -70,41 +71,38 @@ class WeekAdViewController: UIViewController, WeekAdDisplayLogic {
 private extension WeekAdViewController {
     
     func setButton() {
-        selectButton.tintColor = weekAdViewModel.selected ? .white : #colorLiteral(red: 0.05763521045, green: 0.557649672, blue: 0.9972464442, alpha: 1)
-        let title = weekAdViewModel.selected ? weekAdViewModel.selectedActionTitle : weekAdViewModel.actionTitle
-        selectButton.setTitle(title, for: .normal)
-        selectButton.backgroundColor = weekAdViewModel.selected ? #colorLiteral(red: 0.05763521045, green: 0.557649672, blue: 0.9972464442, alpha: 1) : #colorLiteral(red: 0.889477551, green: 0.9738015532, blue: 1, alpha: 1)
+        selectButton.setTitle(weekAdViewModel.buttonTitle, for: .normal)
+        selectButton.setTitleColor(weekAdViewModel.selectButtonTintColor, for: .normal)
+        selectButton.backgroundColor = weekAdViewModel.selectButtonBackgroundColor
     }
     
     func setupButton() {
         selectButton = UIButton(type: .system)
-        selectButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        selectButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(selectButton)
-        selectButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        selectButton.widthAnchor.constraint(equalToConstant: view.bounds.width - 32).isActive = true
-        selectButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        selectButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -15).isActive = true
-        selectButton.layer.cornerRadius = 5
+        selectButton.titleLabel?.font = constants.selectButtonFont
+        selectButton.layer.cornerRadius = constants.selectButtonCornerRadius
         selectButton.layer.masksToBounds = true
+        
+        selectButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(selectButton)
+        
+        selectButton.heightAnchor.constraint(equalToConstant: constants.selectButtonHeight).isActive = true
+        selectButton.widthAnchor.constraint(equalToConstant: view.bounds.width + constants.selectButtonWidthInset).isActive = true
+        selectButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        selectButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -constants.spacing).isActive = true
+        
         selectButton.addTarget(self, action: #selector(showAlert), for: .touchUpInside)
     }
     
     @objc func showAlert() {
-        let alert = UIAlertController(title: weekAdViewModel.titleForAlert, message: nil, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ок", style: .default, handler: nil)
-        alert.addAction(okAction)
-        present(alert, animated: true, completion: nil)
+        alert(title: weekAdViewModel.titleForAlert)
     }
     
     func setupNavigationBar() {
-        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.backgroundColor = constants.backgroundColor
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.shadowImage = UIImage()
-        let config = UIImage.SymbolConfiguration(weight: .bold)
-        let item = UIBarButtonItem.init(image: UIImage(systemName: "xmark",withConfiguration: config), style: .done, target: self, action: nil)
-        item.tintColor = .black
+        let item = UIBarButtonItem.init(image: constants.barButtonImage, style: .done, target: self, action: nil)
+        item.tintColor = constants.itemTintColor
         navigationController?.navigationBar.topItem?.setLeftBarButton(item, animated: true)
     }
 }
@@ -116,11 +114,10 @@ private extension WeekAdViewController {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: setupLayout())
         view.addSubview(collectionView)
         collectionView.autoresizingMask = [.flexibleWidth,.flexibleHeight]
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = constants.backgroundColor
         collectionView.delegate = self
         collectionView.allowsSelection = true
-        collectionView.contentInset.top = 30
-        collectionView.contentInset.bottom = 100
+        collectionView.contentInset = constants.collectionViewContentInset
         
         collectionView.register(WeekAdCollectionViewCell.self, forCellWithReuseIdentifier: WeekAdCollectionViewCell.cellID)
         collectionView.register(WeekAdCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: WeekAdCollectionViewHeader.headerID)
@@ -193,16 +190,16 @@ private extension WeekAdViewController {
             }
         }
         let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 15
+        config.interSectionSpacing = constants.spacing
         layout.configuration = config
         return layout
     }
     
     //MARK: Vertical Section Layout
     func compositionalVerticalLayoutSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(250))
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(250))
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(90))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(constants.estimatedHeight))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(constants.estimatedHeight))
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(constants.absoluteHeaderHeight))
         
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
@@ -210,9 +207,8 @@ private extension WeekAdViewController {
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
         
         section.boundarySupplementaryItems = [header]
-        section.contentInsets = NSDirectionalEdgeInsets(top: 10
-                                                        , leading: 16, bottom: 15, trailing: 16)
-        section.interGroupSpacing = 15
+        section.contentInsets = constants.collectionViewSectionInsets
+        section.interGroupSpacing = constants.spacing
         
         return section
     }

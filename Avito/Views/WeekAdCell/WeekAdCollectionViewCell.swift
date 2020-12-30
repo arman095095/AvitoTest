@@ -22,6 +22,7 @@ class WeekAdCollectionViewCell: UICollectionViewCell {
     private let checkImageView = UIImageView()
     private let serviceTitleLabel = UILabel()
     private let serviceDescriptionLabel = UILabel()
+    private let constants = CellConstants()
     private let priceLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -58,12 +59,12 @@ private extension WeekAdCollectionViewCell {
         contentView.addSubview(serviceDescriptionLabel)
         contentView.addSubview(priceLabel)
         
-        checkImageView.layer.cornerRadius = 10
+        checkImageView.layer.cornerRadius = constants.checkButtonHeight/2
         checkImageView.layer.masksToBounds = true
-        contentView.layer.cornerRadius = 6
+        contentView.layer.cornerRadius = constants.contentViewCornerRadius
         contentView.layer.masksToBounds = true
-        contentView.backgroundColor = .systemGray6
-        checkImageView.image = UIImage(named: "check2")
+        contentView.backgroundColor = constants.backgroundColor
+        checkImageView.image = constants.checkImage
         serviceImageView.translatesAutoresizingMaskIntoConstraints = false
         checkImageView.translatesAutoresizingMaskIntoConstraints = false
         serviceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -73,14 +74,14 @@ private extension WeekAdCollectionViewCell {
         priceLabel.numberOfLines = 0
         serviceTitleLabel.numberOfLines = 0
         serviceDescriptionLabel.numberOfLines = 0
-        priceLabel.font = UIFont.systemFont(ofSize: 16,weight: .bold)
-        serviceTitleLabel.font = UIFont.systemFont(ofSize: 22,weight: .bold)
-        serviceDescriptionLabel.font = UIFont.systemFont(ofSize: 13)
+        priceLabel.font = constants.priceFont
+        serviceTitleLabel.font = constants.titleFont
+        serviceDescriptionLabel.font = constants.descriptionFont
     }
     
     func setupConstraints() {
-        serviceImageView.heightAnchor.constraint(equalToConstant: 52).isActive = true
-        serviceImageView.widthAnchor.constraint(equalToConstant: 52).isActive = true
+        serviceImageView.heightAnchor.constraint(equalToConstant: constants.adImageViewHeight).isActive = true
+        serviceImageView.widthAnchor.constraint(equalToConstant: constants.adImageViewHeight).isActive = true
         serviceImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
         serviceImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15).isActive = true
         
@@ -97,8 +98,8 @@ private extension WeekAdCollectionViewCell {
         priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
         
         checkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-        checkImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        checkImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        checkImageView.heightAnchor.constraint(equalToConstant: constants.checkButtonHeight).isActive = true
+        checkImageView.widthAnchor.constraint(equalToConstant: constants.checkButtonHeight).isActive = true
         checkImageView.centerYAnchor.constraint(equalTo: serviceImageView.centerYAnchor).isActive = true
     }
 }

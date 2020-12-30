@@ -25,6 +25,7 @@ class WeekAdPresenter: WeekAdPresentationLogic {
 }
 
 private extension WeekAdPresenter {
+    
     func convertResponseModelToViewModel(response: ResponseModel) -> WeekAdViewModel {
         let list = response.list.filter { $0.id == "xl" || $0.id == "highlight" }
         let cells = list.map { WeekAdViewModel.CellModel(responseModel: $0) }

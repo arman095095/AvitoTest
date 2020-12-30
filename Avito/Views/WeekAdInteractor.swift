@@ -15,24 +15,13 @@ protocol WeekAdBusinessLogic {
 class WeekAdInteractor: WeekAdBusinessLogic {
     
     var presenter: WeekAdPresentationLogic?
+    private let dataFetcher = DataFetcher()
     
     func makeRequest(request: WeekAd.Model.Request.RequestType) {
         switch request {
         case .decodeData:
-            let result = decode()
+            let result = dataFetcher.decodeJSON(name: "result.json", model: Result.self).result
             presenter?.presentData(response: .present(response: result))
         }
-    }
-}
-
-private extension WeekAdInteractor {
-    
-    func decode() -> ResponseModel {
-        guard let url = Bundle.main.url(forResource: "result.json", withExtension: nil) else { fatalError("incorrect adress") }
-        guard let data = try? Data.init(contentsOf: url) else { fatalError("error loading") }
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        guard let load = try? decoder.decode(Result.self, from: data) else { fatalError("error decoding") }
-        return load.result
     }
 }
