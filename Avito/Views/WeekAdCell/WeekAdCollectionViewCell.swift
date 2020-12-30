@@ -53,11 +53,12 @@ class WeekAdCollectionViewCell: UICollectionViewCell {
 private extension WeekAdCollectionViewCell {
     
     func setupViews() {
-        contentView.addSubview(serviceImageView)
-        contentView.addSubview(checkImageView)
-        contentView.addSubview(serviceTitleLabel)
-        contentView.addSubview(serviceDescriptionLabel)
-        contentView.addSubview(priceLabel)
+        
+        [serviceImageView,checkImageView,serviceTitleLabel,serviceDescriptionLabel,priceLabel].forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            ($0 as? UILabel)?.numberOfLines = 0
+        }
         
         checkImageView.layer.cornerRadius = constants.checkButtonHeight/2
         checkImageView.layer.masksToBounds = true
@@ -65,15 +66,7 @@ private extension WeekAdCollectionViewCell {
         contentView.layer.masksToBounds = true
         contentView.backgroundColor = constants.backgroundColor
         checkImageView.image = constants.checkImage
-        serviceImageView.translatesAutoresizingMaskIntoConstraints = false
-        checkImageView.translatesAutoresizingMaskIntoConstraints = false
-        serviceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        serviceDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        priceLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        priceLabel.numberOfLines = 0
-        serviceTitleLabel.numberOfLines = 0
-        serviceDescriptionLabel.numberOfLines = 0
         priceLabel.font = constants.priceFont
         serviceTitleLabel.font = constants.titleFont
         serviceDescriptionLabel.font = constants.descriptionFont

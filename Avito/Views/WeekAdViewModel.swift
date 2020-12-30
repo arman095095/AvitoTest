@@ -31,11 +31,11 @@ class WeekAdViewModel {
     }
     
     var selectButtonBackgroundColor: UIColor {
-        return selected ? #colorLiteral(red: 0.05763521045, green: 0.557649672, blue: 0.9972464442, alpha: 1) : #colorLiteral(red: 0.889477551, green: 0.9738015532, blue: 1, alpha: 1)
+        return selected ? .buttonBlue : .buttonLight
     }
     
     var selectButtonTintColor: UIColor {
-        return selected ? .white : #colorLiteral(red: 0.05763521045, green: 0.557649672, blue: 0.9972464442, alpha: 1)
+        return selected ? .white : .buttonBlue
     }
     
     var buttonTitle: String {
